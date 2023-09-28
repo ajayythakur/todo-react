@@ -10,7 +10,7 @@ const ToDo = () => {
     const [completedTask, setCompTask] = useState([]);
 
     const addTask = () => {
-        if(task.length == 0){
+        if(task.length === 0){
             alert('Task name cant be empty !');
             return ;
         }
