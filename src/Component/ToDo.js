@@ -3,60 +3,73 @@ import { useState } from 'react';
 import '../App.css'
 
 const ToDo = () => {
-    const [name, setName] = useState("");
     const [task, setTask] = useState("");
+    // eslint-disable-next-line
     const [list, setList] = useState([]);
+    const [ls, setLS] = useState([]);
     const [completedTask, setCompTask] = useState([]);
 
     const addTask = () => {
-        setList((list) => {
-            const newTask = [task, ...list];
-            console.log(newTask);
+        setLS((ls) => {
+            const newTask = [task, ...ls];
+            // console.log(newTask);
             setTask('');
+            localStorage.setItem("task", JSON.stringify(newTask));
             return newTask;
         })
-
-
-
     }
 
+    const getTaskfromLS = () => {
+        const savedTask = localStorage.getItem("task");
+        if (savedTask) {
+
+            const parsedData = JSON.parse(savedTask);
+            // console.log(savedTask);
+            setLS(...ls, parsedData);
+        }
+
+    }
+    // console.log(ls);
+ 
+    useEffect(() => {
+        getTaskfromLS();
+        // eslint-disable-next-line
+    }, [])
+
     const removeTask = (index) => {
-        const updatedList = list.filter((ele, id) => {
+        // console.log(index)
+        const updatedList = ls.filter((ele, id) => {
+            localStorage.removeItem('task');
             return index !== id;
         })
-        setList(updatedList);
+        // console.log(updatedList);
+        localStorage.setItem("task", JSON.stringify(updatedList));
+        setLS(updatedList);
     }
 
     const taskCompleted = (data, index) => {
         removeTask(index);
         setCompTask((completedTask) => {
             const compTaskList = [data, ...completedTask];
-            console.log("completed task", compTaskList);
+            // console.log("completed task", compTaskList);
             return compTaskList;
         });
     }
 
     const emptyTaskLst = () => {
-        setList([]);
+        localStorage.removeItem("task")
+        setLS([]);
     }
-
-    // useEffect(()=>{
-    //     getTaskfromLS();
-    // },[])
-    useEffect(() => {
-        const name = prompt("Enter your name");
-        setName(name);
-    }, [])
     return (
         <>
             <div className='container'>
-                <h1>Welcome {name}</h1>
+                <h1>Welcome </h1>
                 <input type='text' placeholder='Enter Task' value={task} onChange={(e) => setTask(e.target.value)} /> <br />
                 <button onClick={addTask} >Add Task</button>
-                {list.length >= 1 ? <button onClick={emptyTaskLst}>Remove All Task</button> : ""}
+                {ls.length >= 1 ? <button onClick={emptyTaskLst}>Remove All Task</button> : ""}
 
-                {list.length >= 1 ? <h1>Tasks</h1> : <h1>No Active Tasks</h1>}
-                {list !== [] && list.map((data, index) => {
+                {ls.length >= 1 ? <h1>Tasks</h1> : <h1>No Active Tasks</h1>}
+                {ls !== [] && ls.map((data, index) => {
                     return (
                         <>
                             <span key={index}>

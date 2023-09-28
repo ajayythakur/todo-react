@@ -81,6 +81,7 @@ input~button:hover {
   border-radius: 5px;
   cursor: pointer;
   padding: 0px 5px;
+  word-break: break-word;
 }
 
 .completed-task {
